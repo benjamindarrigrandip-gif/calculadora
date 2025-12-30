@@ -1,0 +1,61 @@
+name: Build Windows Executable
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+        
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        
+    - name: Build executable with PyInstaller
+      run: |
+        pyinstaller --onefile --windowed --name Calculadora --icon=NONE calculadora.py
+        
+    - name: List build artifacts
+      run: |
+        dir dist
+        
+    - name: Upload Windows executable
+      uses: actions/upload-artifact@v4
+      with:
+        name: Calculadora-Windows
+        path: dist/Calculadora.exe
+        retention-days: 90
+        
+    - name: Create release info
+      run: |
+        echo "Calculadora Windows Executable" > dist/README.txt
+        echo "================================" >> dist/README.txt
+        echo "" >> dist/README.txt
+        echo "To run the calculator, simply double-click on Calculadora.exe" >> dist/README.txt
+        echo "" >> dist/README.txt
+        echo "Build date: $(Get-Date)" >> dist/README.txt
+        
+    - name: Upload artifact with README
+      uses: actions/upload-artifact@v4
+      with:
+        name: Calculadora-Windows-with-README
+        path: |
+          dist/Calculadora.exe
+          dist/README.txt
+        retention-days: 90
