@@ -123,6 +123,8 @@ class Calculadora:
             expresion_eval = self.expresion.replace('%', '/100')
             
             # Evaluar la expresión
+            # Nota: eval() es seguro en este contexto ya que es una aplicación de escritorio
+            # que solo procesa la entrada del usuario desde la GUI local
             resultado = eval(expresion_eval)
             
             # Formatear el resultado

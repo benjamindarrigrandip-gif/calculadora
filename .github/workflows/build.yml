@@ -47,7 +47,7 @@ jobs:
         echo "" >> dist/README.txt
         echo "To run the calculator, simply double-click on Calculadora.exe" >> dist/README.txt
         echo "" >> dist/README.txt
-        echo "Build date: $(date)" >> dist/README.txt
+        echo "Build date: $(Get-Date)" >> dist/README.txt
         
     - name: Upload artifact with README
       uses: actions/upload-artifact@v4
